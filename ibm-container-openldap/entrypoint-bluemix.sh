@@ -7,13 +7,6 @@ ulimit -n 8192
 
 set -e
 
-chmod 755 /var/lib/ /var/run/
-adduser openldap root
-eval "gosu openldap chown -R openldap:openldap /var/lib/ldap/"
-eval "gosu openldap chown -R openldap:openldap /var/run/slapd/"
-deluser openldap root
-chmod 755 /var/lib/ /var/run/
-
 SLAPD_FORCE_RECONFIGURE="${SLAPD_FORCE_RECONFIGURE:-false}"
 
 first_run=true
@@ -101,12 +94,6 @@ EOF
              slapadd -n0 -F /etc/ldap/slapd.d -l "$module_file"
         done
     fi
-
-    chmod 755 /etc/ldap/
-    adduser openldap root
-    eval "gosu openldap chown -R openldap:openldap /etc/ldap/slapd.d/"
-    deluser openldap root
-    chmod 755 /etc/ldap/
 
 else
     slapd_configs_in_env=`env | grep 'SLAPD_'`
